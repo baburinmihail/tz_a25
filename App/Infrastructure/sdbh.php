@@ -1,6 +1,13 @@
 <?php
 namespace sdbh;
+require_once 'App/Presentation/Setting/Setting.php'; use App\Presentation\Setting\Setting;
 /* Small DataBase Handler */
+
+
+$setting = new Setting;
+
+
+
 class sdbh
 {
     public $port;
@@ -12,13 +19,19 @@ class sdbh
     public $sql_read;
     public $sql_write;
 
-    function __construct(array $settings = [])
+    
+
+    function __construct()
     {
-        $this->port = $settings['host'] ?: 3306;
-        $this->host = $settings['host'] ?: 'localhost';
-        $this->dbname = $settings['dbname'] ?: 'test_a25';
-        $this->user = $settings['user'] ?: 'root';
-        $this->pass = $settings['pass'] ?: '';
+        $setting = new Setting;
+        $db_connect = $setting->global_setting_db();
+
+        $this->port = $settings['port'] = $db_connect['port'];
+        $this->host = $settings['host'] = $db_connect['host'];
+        $this->dbname = $settings['dbname'] = $db_connect['dbname'];
+        $this->user = $settings['user'] = $db_connect['username'];
+        $this->pass = $settings['pass'] = $db_connect['password'];
+        
         $mysql_conn = mysqli_connect($this->host, $this->user, $this->pass, $this->dbname, $this->port);
 
         $this->sql_read = $mysql_conn;
